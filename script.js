@@ -20,41 +20,45 @@ function Comments(postId) {
 
 function render(post) {
     const postCont = document.getElementById('postCont');
-    const postB = document.createElement('div');
-    postB.innerHTML = `
+
+    const postBlock = document.createElement('div');
+    postBlock.innerHTML = `
     <h2>${post.title}</h2>
     <p>${post.body}</p>
   `;
-    const Button = document.createElement('button');
-    Button.textContent = 'Коментарі';
-    Button.onclick = () => {
+
+    const commentsButton = document.createElement('button');
+    commentsButton.textContent = 'Отримати коментарі';
+    commentsButton.onclick = () => {
         Comments(post.id)
             .then((comments) => {
-                const List = document.createElement('ul');
+                const commentsList = document.createElement('ul');
                 comments.forEach((comment) => {
-                    const Item = document.createElement('li');
-                    Item.textContent = comment.body;
-                    List.appendChild(Item);
+                    const commentItem = document.createElement('li');
+                    commentItem.textContent = comment.body;
+                    commentsList.appendChild(commentItem);
                 });
 
-                postB.appendChild(List);
+                postBlock.appendChild(commentsList);
             })
             .catch((error) => {
                 console.error('Помилка коментарів:', error.message);
             });
     };
 
-    postB.appendChild(Button);
-    postCont.appendChild(postB);
+    postBlock.appendChild(commentsButton);
+    postCont.appendChild(postBlock);
 }
 
 function searchPost() {
     const postIdInput = document.getElementById('postIdInput');
     const postId = parseInt(postIdInput.value, 10);
+
     if (!Number.isInteger(postId) || postId < 1 || postId > 100) {
-        console.error('Введіть дійсний ід (1-100)');
+        alert('Введіть дійсний ID (1-100)');
         return;
     }
+
     Post(postId)
         .then((post) => {
             const postCont = document.getElementById('postCont');
@@ -62,6 +66,6 @@ function searchPost() {
             render(post);
         })
         .catch((error) => {
-            console.error('Помилка при отриманні поста:', error.message);
+            console.error('Помилка поста:', error.message);
         });
 }
